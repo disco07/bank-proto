@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+package bank.v1;
+
+import "google/type/date.proto";
+
+message CurrentBalanceRequest {
+  string account_number = 1 [ json_name = "account_number" ];
+}
+
+message CurrentBalanceResponse {
+  double amount = 1 [ json_name = "amount" ];
+  google.type.Date current_date = 2 [ json_name = "current_date" ];
+}

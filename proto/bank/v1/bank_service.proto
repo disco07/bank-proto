@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+package bank.v1;
+
+import "google/api/annotations.proto";
+import "google/protobuf/empty.proto";
+import "bank/v1/bank.proto";
+
+service BankService {
+  rpc GetCurrentBalance(CurrentBalanceRequest) returns (CurrentBalanceResponse) {
+    option (google.api.http) = {
+      get: "/v1/bank/current_balance/{account_number}"
+    };
+  }
+}
