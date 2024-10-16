@@ -14,9 +14,14 @@ endif
 
 .PHONY: protoc-go
 protoc-go:
-	protoc --go_opt=module=${GO_MODULE} --go_out=. \
-	--go-grpc_opt=module=${GO_MODULE} --go-grpc_out=. \
-	./**/*.proto
+	cd proto && find . -name "*.proto" \
+        ! -path "./google/*" \
+        ! -path "./**/google/*" \
+        -exec protoc -I . \
+         			--go_out=../protogen/go \
+                    --go_opt=paths=source_relative \
+                    --go-grpc_out=../protogen/go \
+                    --go-grpc_opt=paths=source_relative {} +
 
 .PHONY: build
 build: clean protoc-go
@@ -49,16 +54,16 @@ endif
 
 .PHONY: protoc-go-gateway
 protoc-go-gateway:
-	protoc -I . \
-	--grpc-gateway_out ./protogen/gateway/go \
-	--grpc-gateway_opt logtostderr=true \
-	--grpc-gateway_opt paths=source_relative \
-	--grpc-gateway_opt grpc_api_configuration=./grpc-gateway/config.yml \
-	--grpc-gateway_opt standalone=true \
-	--grpc-gateway_opt generate_unbound_methods=true \
-	./proto/hello/*.proto \
-	./proto/bank/*.proto ./proto/bank/type/*.proto \
-	./proto/resiliency/*.proto
+	cd proto && find . -name "*.proto" \
+            ! -path "./google/*" \
+            ! -path "./**/google/*" \
+            -exec protoc -I . \
+            	--grpc-gateway_out ../protogen/gateway/go \
+				--grpc-gateway_opt logtostderr=true \
+				--grpc-gateway_opt paths=source_relative \
+				--grpc-gateway_opt grpc_api_configuration=../grpc-gateway/config.yaml \
+				--grpc-gateway_opt standalone=true \
+				--grpc-gateway_opt generate_unbound_methods=true {} +
 
 
 .PHONY: protoc-openapiv2-gateway

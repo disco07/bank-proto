@@ -2,14 +2,10 @@ syntax = "proto3";
 
 package bank.v1;
 
-import "google/api/annotations.proto";
-import "google/protobuf/empty.proto";
 import "bank/v1/bank.proto";
 
+option go_package = "github.com/disco07/bank-proto/protogen/go/bank/v1";
+
 service BankService {
-  rpc GetCurrentBalance(CurrentBalanceRequest) returns (CurrentBalanceResponse) {
-    option (google.api.http) = {
-      get: "/v1/bank/current_balance/{account_number}"
-    };
-  }
+  rpc GetCurrentBalance(CurrentBalanceRequest) returns (CurrentBalanceResponse) {}
 }

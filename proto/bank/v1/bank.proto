@@ -4,6 +4,8 @@ package bank.v1;
 
 import "google/type/date.proto";
 
+option go_package = "github.com/disco07/bank-proto/protogen/go/bank/v1";
+
 message CurrentBalanceRequest {
   string account_number = 1 [ json_name = "account_number" ];
 }
