@@ -1,0 +1,15 @@
+openapiOptions:
+  service:
+    - service: bank.v1.BankService
+      option:
+        description: "BankService description -- which should not be used in place of the documentation comment!"
+  method:
+    - method: bank.v1.BankService.GetCurrentBalance
+      option:
+        description: "BankService description -- which should not be used in place of the documentation comment!"
+        summary: "BankService summary -- which should not be used in place of the documentation comment!"
+        responses:
+          "200":
+            description: "Return current account balance"
+          "400":
+            description: "Returned when given account number is not exists"

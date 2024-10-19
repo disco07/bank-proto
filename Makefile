@@ -44,11 +44,11 @@ clean-gateway:
 ifeq ($(OS), Windows_NT)
 	if exist "protogen\gateway" rd /s /q protogen\gateway
 	mkdir protogen\gateway\go
-	mkdir protogen\gateway\openapiv2
+	mkdir api
 else
 	rm -fR ./protogen/gateway
 	mkdir -p ./protogen/gateway/go
-	mkdir -p ./protogen/gateway/openapiv2
+	mkdir -p ./api
 endif
 
 
@@ -65,21 +65,19 @@ protoc-go-gateway:
 				--grpc-gateway_opt standalone=true \
 				--grpc-gateway_opt generate_unbound_methods=true {} +
 
-
 .PHONY: protoc-openapiv2-gateway
 protoc-openapiv2-gateway:
 	cd proto && find . -name "*.proto" \
                 ! -path "./google/*" \
                 ! -path "./**/google/*" \
 	-exec protoc -I . \
-	 	--openapiv2_out ./protogen/gateway/openapiv2 \
+	 	--openapiv2_out ../api \
 		--openapiv2_opt logtostderr=true \
 		--openapiv2_opt output_format=yaml \
 		--openapiv2_opt grpc_api_configuration=../grpc-gateway/config.yaml \
-  		--openapiv2_opt openapi_configuration=../grpc-gateway/config_swagger.yaml \
+  		--openapiv2_opt openapi_configuration=../grpc-gateway/config.swagger.yaml \
 		--openapiv2_opt generate_unbound_methods=true \
-		--openapiv2_opt allow_merge=true \
-		--openapiv2_opt merge_file_name=merged {} +
+		--openapiv2_opt allow_merge=true {} +
 
 .PHONY: build-gateway
 build-gateway: clean-gateway protoc-go-gateway
