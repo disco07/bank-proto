@@ -45,13 +45,20 @@ clean-gateway:
 ifeq ($(OS), Windows_NT)
 	if exist "protogen\gateway" rd /s /q protogen\gateway
 	mkdir protogen\gateway\go
-	mkdir openapi
 else
 	rm -fR ./protogen/gateway
 	mkdir -p ./protogen/gateway/go
-	mkdir -p ./openapi
 endif
 
+.PHONY: clean-openapi
+clean-openapi:
+ifeq ($(OS), Windows_NT)
+	if exist "openapi" rd /s /q openapi
+	mkdir openapi
+else
+	rm -fR ./openapi
+	mkdir -p ./openapi
+endif
 
 .PHONY: protoc-go-gateway
 protoc-go-gateway:
@@ -82,6 +89,9 @@ protoc-openapiv2-gateway:
 .PHONY: build-gateway
 build-gateway: clean-gateway protoc-go-gateway
 
+.PHONY: build-openapi
+build-openapi: clean-openapi protoc-openapiv2-gateway
+
 
 .PHONY: pipeline-init-gateway
 pipeline-init-gateway:
@@ -90,4 +100,4 @@ pipeline-init-gateway:
 
 
 .PHONY: pipeline-build-gateway
-pipeline-build-gateway: pipeline-init-gateway protoc-openapiv2-gateway build-gateway
+pipeline-build-gateway: pipeline-init-gateway build-openapi build-gateway
