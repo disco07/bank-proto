@@ -90,4 +90,4 @@ pipeline-init-gateway:
 
 
 .PHONY: pipeline-build-gateway
-pipeline-build-gateway: pipeline-init-gateway build-gateway protoc-openapiv2-gateway
+pipeline-build-gateway: pipeline-init-gateway protoc-openapiv2-gateway build-gateway
