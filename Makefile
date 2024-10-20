@@ -45,13 +45,20 @@ clean-gateway:
 ifeq ($(OS), Windows_NT)
 	if exist "protogen\gateway" rd /s /q protogen\gateway
 	mkdir protogen\gateway\go
-	mkdir api
 else
 	rm -fR ./protogen/gateway
 	mkdir -p ./protogen/gateway/go
-	mkdir -p ./api
 endif
 
+.PHONY: clean-openapi
+clean-openapi:
+ifeq ($(OS), Windows_NT)
+	if exist "openapi" rd /s /q openapi
+	mkdir openapi
+else
+	rm -fR ./protogen/gateway/openapi
+	mkdir -p ./protogen/gateway/openapi
+endif
 
 .PHONY: protoc-go-gateway
 protoc-go-gateway:
@@ -73,7 +80,7 @@ protoc-openapiv2-gateway:
                 ! -path "./**/google/*" \
             	! -path "./protoc-gen-openapiv2/*" \
 				-exec protoc -I . \
-					--openapiv2_out ../api \
+					--openapiv2_out ../protogen/gateway/openapi \
 					--openapiv2_opt logtostderr=true \
 					--openapiv2_opt output_format=yaml \
 					--openapiv2_opt generate_unbound_methods=true \
@@ -81,6 +88,9 @@ protoc-openapiv2-gateway:
 
 .PHONY: build-gateway
 build-gateway: clean-gateway protoc-go-gateway
+
+.PHONY: build-openapi
+build-openapi: clean-openapi protoc-openapiv2-gateway
 
 
 .PHONY: pipeline-init-gateway
@@ -90,4 +100,4 @@ pipeline-init-gateway:
 
 
 .PHONY: pipeline-build-gateway
-pipeline-build-gateway: pipeline-init-gateway build-gateway protoc-openapiv2-gateway
+pipeline-build-gateway: pipeline-init-gateway build-gateway build-openapi
