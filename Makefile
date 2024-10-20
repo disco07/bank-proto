@@ -56,8 +56,8 @@ ifeq ($(OS), Windows_NT)
 	if exist "openapi" rd /s /q openapi
 	mkdir openapi
 else
-	rm -fR ./openapi
-	mkdir -p ./openapi
+	rm -fR ./protogen/gateway/openapi
+	mkdir -p ./protogen/gateway/openapi
 endif
 
 .PHONY: protoc-go-gateway
@@ -80,7 +80,7 @@ protoc-openapiv2-gateway:
                 ! -path "./**/google/*" \
             	! -path "./protoc-gen-openapiv2/*" \
 				-exec protoc -I . \
-					--openapiv2_out ../openapi \
+					--openapiv2_out ../protogen/gateway/openapi \
 					--openapiv2_opt logtostderr=true \
 					--openapiv2_opt output_format=yaml \
 					--openapiv2_opt generate_unbound_methods=true \
@@ -100,4 +100,4 @@ pipeline-init-gateway:
 
 
 .PHONY: pipeline-build-gateway
-pipeline-build-gateway: pipeline-init-gateway build-openapi build-gateway
+pipeline-build-gateway: pipeline-init-gateway build-gateway build-openapi
