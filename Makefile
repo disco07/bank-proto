@@ -45,11 +45,11 @@ clean-gateway:
 ifeq ($(OS), Windows_NT)
 	if exist "protogen\gateway" rd /s /q protogen\gateway
 	mkdir protogen\gateway\go
-	mkdir api
+	mkdir openapi
 else
 	rm -fR ./protogen/gateway
 	mkdir -p ./protogen/gateway/go
-	mkdir -p ./api
+	mkdir -p ./openapi
 endif
 
 
@@ -73,7 +73,7 @@ protoc-openapiv2-gateway:
                 ! -path "./**/google/*" \
             	! -path "./protoc-gen-openapiv2/*" \
 				-exec protoc -I . \
-					--openapiv2_out ../api \
+					--openapiv2_out ../openapi \
 					--openapiv2_opt logtostderr=true \
 					--openapiv2_opt output_format=yaml \
 					--openapiv2_opt generate_unbound_methods=true \
