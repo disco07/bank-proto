@@ -17,6 +17,7 @@ protoc-go:
 	cd proto && find . -name "*.proto" \
         ! -path "./google/*" \
         ! -path "./**/google/*" \
+        ! -path "./protoc-gen-openapiv2/*" \
         -exec protoc -I . \
          			--go_out=../protogen/go \
                     --go_opt=paths=source_relative \
@@ -57,11 +58,11 @@ protoc-go-gateway:
 	cd proto && find . -name "*.proto" \
             ! -path "./google/*" \
             ! -path "./**/google/*" \
+            ! -path "./protoc-gen-openapiv2/*" \
             -exec protoc -I . \
             	--grpc-gateway_out ../protogen/gateway/go \
 				--grpc-gateway_opt logtostderr=true \
 				--grpc-gateway_opt paths=source_relative \
-				--grpc-gateway_opt grpc_api_configuration=../grpc-gateway/config.yaml \
 				--grpc-gateway_opt standalone=true \
 				--grpc-gateway_opt generate_unbound_methods=true {} +
 
@@ -70,14 +71,13 @@ protoc-openapiv2-gateway:
 	cd proto && find . -name "*.proto" \
                 ! -path "./google/*" \
                 ! -path "./**/google/*" \
-	-exec protoc -I . \
-	 	--openapiv2_out ../api \
-		--openapiv2_opt logtostderr=true \
-		--openapiv2_opt output_format=yaml \
-		--openapiv2_opt grpc_api_configuration=../grpc-gateway/config.yaml \
-  		--openapiv2_opt openapi_configuration=../grpc-gateway/config.swagger.yaml \
-		--openapiv2_opt generate_unbound_methods=true \
-		--openapiv2_opt allow_merge=true {} +
+            	! -path "./protoc-gen-openapiv2/*" \
+				-exec protoc -I . \
+					--openapiv2_out ../api \
+					--openapiv2_opt logtostderr=true \
+					--openapiv2_opt output_format=yaml \
+					--openapiv2_opt generate_unbound_methods=true \
+					--openapiv2_opt allow_merge=true {} +
 
 .PHONY: build-gateway
 build-gateway: clean-gateway protoc-go-gateway
